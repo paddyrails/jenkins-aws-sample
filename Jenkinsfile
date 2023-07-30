@@ -16,11 +16,14 @@ pipeline {
       stage('initialize') {
           steps {
             script {
-              s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
-              def buildProps = readProperties  file:'build.properties'              
-              ACTIVE_COLOR=buildProps['ACTIVE_COLOR']
-              TEST_COLOR=buildProps['TEST_COLOR']
-              ACTIVE_ENVIRONMENTNAME=buildProps['ACTIVE_ENVIRONMENTNAME']              
+              // Download build.properties.json
+              s3Download(file:'build.properties.json', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties.json', force:true)
+              // Read Json values
+              buildPropsJsonfile = readJSON file: 'build.properties.json', returnPojo: true              
+              // Set global variables                           
+              ACTIVE_COLOR=buildPropsJsonfile['ACTIVE_COLOR']
+              TEST_COLOR=buildPropsJsonfile['TEST_COLOR']
+              ACTIVE_ENVIRONMENTNAME=buildPropsJsonfile['ACTIVE_ENVIRONMENTNAME']              
             }
             
           }
@@ -42,6 +45,19 @@ pipeline {
         stage('Complete') {
             steps {
                 echo 'Job Complete!'
+
+                // CLEANUP
+                script{
+                  buildPropsJsonfile = readJSON file: 'build.properties.json', returnPojo: true
+                  // SWAP ACTIVE AND TEST COLOR
+                  buildPropsJsonfile['ACTIVE_COLOR']=TEST_COLOR
+                  buildPropsJsonfile['TEST_COLOR']=ACTIVE_COLOR
+                  buildPropsJsonfile['ACTIVE_ENVIRONMENTNAME']="NEW_ENV"
+                  writeJSON file: 'build.properties.json', json: jsonfile
+                  s3Upload(file:"build.properties.json", 
+                    bucket:"popsy-bucket", 
+                    path:"Todo-rest-api-docker/build.properties.json")
+                }
             }
         }
     }
