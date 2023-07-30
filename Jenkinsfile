@@ -14,10 +14,13 @@ pipeline {
     stages {
       stage('initialize') {
           steps {
-            s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
-            props = readProperties  file:'build.properties'
-            ACTIVE_COLOR= props['ACTIVE_COLOR']
-            ACTIVE_ENVIRONMENTNAME= props['ACTIVE_ENVIRONMENTNAME']
+            script {
+              s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
+              props = readProperties  file:'build.properties'
+              ACTIVE_COLOR= props['ACTIVE_COLOR']
+              ACTIVE_ENVIRONMENTNAME= props['ACTIVE_ENVIRONMENTNAME']
+            }
+            
           }
         }
         stage('Build') {
