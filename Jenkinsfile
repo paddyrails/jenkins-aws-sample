@@ -53,7 +53,7 @@ pipeline {
                   buildPropsJsonfile['ACTIVE_COLOR']=TEST_COLOR
                   buildPropsJsonfile['TEST_COLOR']=ACTIVE_COLOR
                   buildPropsJsonfile['ACTIVE_ENVIRONMENTNAME']="NEW_ENV"
-                  writeJSON file: 'build.properties.json', json: jsonfile
+                  writeJSON file: 'build.properties.json', json: buildPropsJsonfile
                   s3Upload(file:"build.properties.json", 
                     bucket:"popsy-bucket", 
                     path:"Todo-rest-api-docker/build.properties.json")
