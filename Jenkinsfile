@@ -1,6 +1,6 @@
 
-def ACTIVE_COLOR
-def ACTIVE_ENVIRONMENTNAME
+def ACTIVE_COLOR = ''
+def ACTIVE_ENVIRONMENTNAME = ''
 
 pipeline {
     agent any
