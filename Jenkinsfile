@@ -1,6 +1,7 @@
 
 def ACTIVE_COLOR = ''
 def ACTIVE_ENVIRONMENTNAME = ''
+def TEST_COLOR = ''
 
 pipeline {
     agent any
@@ -16,10 +17,10 @@ pipeline {
           steps {
             script {
               s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
-              def props = readProperties  file:'build.properties'
-              echo "${props}"
-              ACTIVE_COLOR=props['ACTIVE_COLOR']
-              ACTIVE_ENVIRONMENTNAME=props['ACTIVE_ENVIRONMENTNAME']
+              def buildProps = readProperties  file:'build.properties'              
+              ACTIVE_COLOR=buildProps['ACTIVE_COLOR']
+              TEST_COLOR=buildProps['TEST_COLOR']
+              ACTIVE_ENVIRONMENTNAME=buildProps['ACTIVE_ENVIRONMENTNAME']              
             }
             
           }
@@ -29,6 +30,7 @@ pipeline {
                 echo "BUILD"   
                 echo "ACTIVE_COLOR=${ACTIVE_COLOR}"
                 echo "ACTIVE_ENVIRONMENTNAME=${ACTIVE_ENVIRONMENTNAME}"
+                echo "TEST_COLOR=${TEST_COLOR}"
             }
         }
         stage('Test') {
