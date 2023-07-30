@@ -13,8 +13,6 @@ pipeline {
         PATH="/usr/local/bin:$PATH"
         DOCKER_HUB_CREDENTIALS= credentials('DOCKER_HUB_CREDENTIALS')     
     }
-    parameters {      
-    }
     stages {
         stage('Build') {
             steps {
