@@ -1,7 +1,9 @@
-s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
-def props = readProperties  file:'build.properties'
-def ACTIVE_COLOR= props['ACTIVE_COLOR']
-def ACTIVE_ENVIRONMENTNAME= props['ACTIVE_ENVIRONMENTNAME']
+node {
+  s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
+  def props = readProperties  file:'build.properties'
+  def ACTIVE_COLOR= props['ACTIVE_COLOR']
+  def ACTIVE_ENVIRONMENTNAME= props['ACTIVE_ENVIRONMENTNAME']
+}
 
 
 pipeline {
