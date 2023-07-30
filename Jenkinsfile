@@ -1,10 +1,6 @@
-node {
-  s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
-  def props = readProperties  file:'build.properties'
-  def ACTIVE_COLOR= props['ACTIVE_COLOR']
-  def ACTIVE_ENVIRONMENTNAME= props['ACTIVE_ENVIRONMENTNAME']
-}
 
+def ACTIVE_COLOR
+def ACTIVE_ENVIRONMENTNAME
 
 pipeline {
     agent any
@@ -16,6 +12,12 @@ pipeline {
         DOCKER_HUB_CREDENTIALS= credentials('DOCKER_HUB_CREDENTIALS')     
     }
     stages {
+      stage {
+          s3Download(file:'build.properties', bucket:'popsy-bucket', path:'Todo-rest-api-docker/build.properties', force:true)
+          props = readProperties  file:'build.properties'
+          ACTIVE_COLOR= props['ACTIVE_COLOR']
+          ACTIVE_ENVIRONMENTNAME= props['ACTIVE_ENVIRONMENTNAME']
+        }
         stage('Build') {
             steps {
                 echo "BUILD"   
